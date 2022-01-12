@@ -36,7 +36,7 @@ while True:
                     result_text = 'Ты не справился, нужно переделать'
                 bot.send_message(
                     text=f'Преподаватель проверил работу '
-                    '"{title}"\n\n{result_text}\n{link}',
+                    f'"{title}"\n\n{result_text}\n{link}',
                     chat_id=CHAT_ID)
         else:
             timestamp = reviews['timestamp_to_request']
