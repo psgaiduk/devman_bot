@@ -2,6 +2,7 @@ import os
 from requests import get, exceptions
 import time
 from telegram import Bot
+import logging
 
 TOKEN_TELEGRAM = os.environ['TOKEN_TELEGRAM']
 TOKEN_DEVMAN = os.environ['TOKEN_DEVMAN']
@@ -15,6 +16,9 @@ def get_reviews(url_, headers_, params_):
     response = get(url_, headers=headers_, params=params_)
     response.raise_for_status()
     return response.json()
+
+
+logging.info('Чат бот начал работу')
 
 params = {}
 while True:
