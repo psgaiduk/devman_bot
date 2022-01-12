@@ -10,6 +10,7 @@ CHAT_ID = os.getenv('CHAT_ID')
 bot = Bot(token=TOKEN_TELEGRAM)
 headers = {'Authorization': TOKEN_DEVMAN}
 url = 'https://dvmn.org/api/long_polling/'
+logging.basicConfig(level=logging.INFO)
 
 
 def get_reviews(url_, headers_, params_):
