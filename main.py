@@ -38,7 +38,10 @@ while True:
         else:
             timestamp = reviews['timestamp_to_request']
             params = {'timestamp': timestamp}
-    except exceptions.ReadTimeout:
-        pass
-    except exceptions.ConnectionError:
+    except exceptions.ReadTimeout as err:
+        logger.error(err, exc_info=True)
+    except exceptions.ConnectionError as err:
+        logger.error(err, exc_info=True)
         time.sleep(1)
+    except Exception as err:
+        logger.error(err, exc_info=True)
