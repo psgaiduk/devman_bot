@@ -1,16 +1,12 @@
-import os
+
 from requests import get, exceptions
 import time
-from telegram import Bot
-import logging
+import logging.config
+from project_settings import logger_config, BOT, CHAT_ID, HEADERS, URL
 
-TOKEN_TELEGRAM = os.environ['TOKEN_TELEGRAM']
-TOKEN_DEVMAN = os.environ['TOKEN_DEVMAN']
-CHAT_ID = os.getenv('CHAT_ID')
-bot = Bot(token=TOKEN_TELEGRAM)
-headers = {'Authorization': TOKEN_DEVMAN}
-url = 'https://dvmn.org/api/long_polling/'
-logging.basicConfig(level=logging.INFO)
+
+logging.config.dictConfig(logger_config)
+logger = logging.getLogger('app_logger')
 
 
 def get_reviews(url_, headers_, params_):
@@ -19,12 +15,12 @@ def get_reviews(url_, headers_, params_):
     return response.json()
 
 
-logging.info('Чат бот начал работу')
+logger.info('Чат бот начал работу')
 
 params = {}
 while True:
     try:
-        reviews = get_reviews(url, headers, params)
+        reviews = get_reviews(URL, HEADERS, params)
         if reviews.get('new_attempts'):
             timestamp = reviews['last_attempt_timestamp']
             new_attempts = reviews['new_attempts']
@@ -35,7 +31,7 @@ while True:
                 result_text = 'Преподавтель принял вашу работу'
                 if result:
                     result_text = 'Ты не справился, нужно переделать'
-                bot.send_message(
+                BOT.send_message(
                     text=f'Преподаватель проверил работу '
                     f'"{title}"\n\n{result_text}\n{link}',
                     chat_id=CHAT_ID)
