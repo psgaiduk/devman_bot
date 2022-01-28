@@ -2,7 +2,8 @@
 from requests import get, exceptions
 import time
 import logging.config
-from project_settings import logger_config, BOT, CHAT_ID, HEADERS, URL
+from project_constants import BOT, CHAT_ID, HEADERS, URL
+from logger_settings import logger_config
 
 
 logging.config.dictConfig(logger_config)
