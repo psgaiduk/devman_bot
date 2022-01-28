@@ -23,6 +23,10 @@ This command will immediately install:
 2. python-telegram-bot
 3. python-dotenv
 
+## Start Bot
+
+You need run ```python main.py```
+
 
 
 
