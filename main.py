@@ -1,4 +1,3 @@
-from textwrap import dedent
 from requests import get, exceptions
 import time
 import logging.config
