@@ -42,7 +42,8 @@ def main():
                     BOT.send_message(
                         text=dedent(text_message),
                         chat_id=CHAT_ID)
-            timestamp = reviews['timestamp_to_request']
+            else:
+                timestamp = reviews['timestamp_to_request']
             params = {'timestamp': timestamp}
         except exceptions.ReadTimeout as err:
             logger.error(err, exc_info=True)
