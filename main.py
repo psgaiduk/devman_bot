@@ -34,13 +34,12 @@ def main():
                     if result:
                         result_text = 'Ты не справился, нужно переделать'
 
-                    text_message = f'''Преподаватель проверил работу
-                    "{title}"
-                    
-                    {result_text}
-                    {link}'''
+                    text_message = f'Преподаватель проверил работу\n' \
+                                   f'"{title}"\n\n' \
+                                   f'{result_text}\n' \
+                                   f'{link}'
                     BOT.send_message(
-                        text=dedent(text_message),
+                        text=text_message,
                         chat_id=CHAT_ID)
             else:
                 timestamp = reviews['timestamp_to_request']
