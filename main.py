@@ -1,4 +1,4 @@
-
+from textwrap import dedent
 from requests import get, exceptions
 import time
 import logging.config
@@ -33,9 +33,14 @@ def main():
                     result_text = 'Преподавтель принял вашу работу'
                     if result:
                         result_text = 'Ты не справился, нужно переделать'
+
+                    text_message = f'''Преподаватель проверил работу
+                    "{title}"
+                    
+                    {result_text}
+                    {link}'''
                     BOT.send_message(
-                        text=f'Преподаватель проверил работу '
-                        f'"{title}"\n\n{result_text}\n{link}',
+                        text=dedent(text_message),
                         chat_id=CHAT_ID)
             else:
                 timestamp = reviews['timestamp_to_request']
