@@ -4,8 +4,6 @@ import logging.config
 from project_constants import BOT, CHAT_ID, HEADERS, URL
 from logger_settings import logger_config
 
-
-logging.config.dictConfig(logger_config)
 logger = logging.getLogger('app_logger')
 
 
@@ -53,4 +51,5 @@ def main():
 
 
 if __name__ == '__main__':
+    logging.config.dictConfig(logger_config)
     main()
