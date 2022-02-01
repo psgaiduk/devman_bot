@@ -15,12 +15,39 @@ def get_reviews(url_, headers_, params_):
 
 
 def main():
+    dotenv_path = os.path.join(os.path.dirname(__file__), '.env')
+    if os.path.exists(dotenv_path):
+        load_dotenv(dotenv_path)
+
+    token_telegram = os.environ['TOKEN_TELEGRAM']
+    token_devman = os.environ['TOKEN_DEVMAN']
+    chat_id = os.getenv('CHAT_ID')
+
+    headers = {'Authorization': token_devman}
+    url = 'https://dvmn.org/api/long_polling/'
+
+    bot = Bot(token=token_telegram)
+
+    class BotHandler(logging.Handler):
+        def __init__(self):
+            logging.Handler.__init__(self)
+
+        def emit(self, record):
+            message = self.format(record)
+            bot.send_message(
+                text=f'{message}',
+                chat_id=chat_id)
+
+    logger.addHandler(BotHandler())
+    logger.setLevel('INFO')
+    logging.basicConfig(format='{asctime} - {levelname} - {name} - {message}', style='{')
+
     logger.info('Чат бот начал работу')
 
     params = {}
     while True:
         try:
-            reviews = get_reviews(URL, HEADERS, params)
+            reviews = get_reviews(url, headers, params)
             if reviews.get('new_attempts'):
                 timestamp = reviews['last_attempt_timestamp']
                 new_attempts = reviews['new_attempts']
@@ -36,9 +63,9 @@ def main():
                                    f'"{title}"\n\n' \
                                    f'{result_text}\n' \
                                    f'{link}'
-                    BOT.send_message(
+                    bot.send_message(
                         text=text_message,
-                        chat_id=CHAT_ID)
+                        chat_id=chat_id)
             else:
                 timestamp = reviews['timestamp_to_request']
             params = {'timestamp': timestamp}
@@ -52,30 +79,4 @@ def main():
 
 
 if __name__ == '__main__':
-    dotenv_path = os.path.join(os.path.dirname(__file__), '.env')
-    if os.path.exists(dotenv_path):
-        load_dotenv(dotenv_path)
-
-    TOKEN_TELEGRAM = os.environ['TOKEN_TELEGRAM']
-    TOKEN_DEVMAN = os.environ['TOKEN_DEVMAN']
-    CHAT_ID = os.getenv('CHAT_ID')
-
-    HEADERS = {'Authorization': TOKEN_DEVMAN}
-    URL = 'https://dvmn.org/api/long_polling/'
-
-    BOT = Bot(token=TOKEN_TELEGRAM)
-
-    class BotHandler(logging.Handler):
-        def __init__(self):
-            logging.Handler.__init__(self)
-
-        def emit(self, record):
-            message = self.format(record)
-            BOT.send_message(
-                text=f'{message}',
-                chat_id=CHAT_ID)
-
-    logger.addHandler(BotHandler())
-    logger.setLevel('INFO')
-    logging.basicConfig(format='{asctime} - {levelname} - {name} - {message}', style='{')
     main()
