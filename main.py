@@ -1,8 +1,9 @@
 from requests import get, exceptions
 import time
-import logging.config
-from project_constants import BOT, CHAT_ID, HEADERS, URL
-from logger_settings import logger_config
+import os
+from telegram import Bot
+from dotenv import load_dotenv
+import logging
 
 logger = logging.getLogger('app_logger')
 
@@ -51,5 +52,30 @@ def main():
 
 
 if __name__ == '__main__':
-    logging.config.dictConfig(logger_config)
+    dotenv_path = os.path.join(os.path.dirname(__file__), '.env')
+    if os.path.exists(dotenv_path):
+        load_dotenv(dotenv_path)
+
+    TOKEN_TELEGRAM = os.environ['TOKEN_TELEGRAM']
+    TOKEN_DEVMAN = os.environ['TOKEN_DEVMAN']
+    CHAT_ID = os.getenv('CHAT_ID')
+
+    HEADERS = {'Authorization': TOKEN_DEVMAN}
+    URL = 'https://dvmn.org/api/long_polling/'
+
+    BOT = Bot(token=TOKEN_TELEGRAM)
+
+    class BotHandler(logging.Handler):
+        def __init__(self):
+            logging.Handler.__init__(self)
+
+        def emit(self, record):
+            message = self.format(record)
+            BOT.send_message(
+                text=f'{message}',
+                chat_id=CHAT_ID)
+
+    logger.addHandler(BotHandler())
+    logger.setLevel('INFO')
+    logging.basicConfig(format='{asctime} - {levelname} - {name} - {message}', style='{')
     main()
